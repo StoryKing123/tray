@@ -13,8 +13,8 @@ type ReaderProps = {
   onChange: any;
 };
 const Reader: FC<ReaderProps> = (props) => {
+  console.log("reader render");
   const [input, setInput] = useRecoilState(inputState);
-  const [_, setTranslation] = useRecoilState(translationState);
   const [inputValue, setInputValue] = useControllableValue<string>(props, {
     defaultValue: "",
   });

@@ -36,18 +36,18 @@ pub mod translate {
         let mut header_map = HeaderMap::new();
         let mut map = HashMap::new();
         map.insert("SourceText", text);
-        map.insert("Source", "auto");
+        map.insert("Source", "en");
         map.insert("Target", "zh");
         map.insert("ProjectId", "0");
         // let payload = serde_json::to_string(&map).unwrap();
         let payload = format!(
-            "{{\"SourceText\":\"{}\",\"Source\":\"auto\",\"Target\":\"zh\",\"ProjectId\":0}}",
+            "{{\"SourceText\":\"{}\",\"Source\":\"en\",\"Target\":\"zh\",\"ProjectId\":0}}",
             text
         );
 
         let translate_body = TranslateBody {
             SourceText: String::from(text),
-            Source: String::from("auto"),
+            Source: String::from("en"),
             Target: String::from("zh"),
             ProjectId: 0,
         };

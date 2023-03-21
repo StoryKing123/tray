@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Reader from "../../component/Reader";
 import Translation from "../../component/Translation";
 // import * as styles from "./translate.css";
@@ -10,11 +10,11 @@ import { useTranslate } from "../../hooks/useTranslate";
 import { readText } from "@tauri-apps/api/clipboard";
 
 const Translate = () => {
+  console.log("page render");
   const setInput = useSetRecoilState(inputState);
 
   const [text, translate] = useTranslate();
   const [inputValue, setInputValue] = useState("");
-
 
   let unlisten: Function | null;
   const init = async () => {
@@ -37,10 +37,15 @@ const Translate = () => {
     };
   }, []);
 
+  const TranslationMemo = useMemo(() => {
+    return <Translation></Translation>;
+  }, [text]);
+
   return (
     <div className="p-4 flex flex-col gap-4">
       <Reader onChange={setInputValue} value={inputValue}></Reader>
-      <Translation></Translation>
+      {TranslationMemo}
+      {/* <TranslationMemo></TranslationMemo> */}
     </div>
   );
 };
