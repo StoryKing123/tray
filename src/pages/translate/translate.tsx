@@ -1,52 +1,48 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Reader from "../../component/Reader";
 import Translation from "../../component/Translation";
-import * as styles from "./translate.css";
+// import * as styles from "./translate.css";
 import { WebviewWindow } from "@tauri-apps/api/window";
 import { useSetRecoilState } from "recoil";
 import { inputState } from "../../store";
 import { emit, listen } from "@tauri-apps/api/event";
+import { useTranslate } from "../../hooks/useTranslate";
+import { readText } from "@tauri-apps/api/clipboard";
 
 const Translate = () => {
-    const setInput = useSetRecoilState(inputState);
-    const init = async () => {
-        const currentWindow = WebviewWindow.getByLabel("theUniqueLabel");
-        let unlistener = await listen("paste", (e) => {
-            alert(1)
-            console.log("paste");
-            console.log(e);
-        });
-        console.log(unlistener);
-        await currentWindow?.listen("paste", (e) => {
-            alert(2)
-            console.log("paste!");
-            console.log(e);
-        });
+  const setInput = useSetRecoilState(inputState);
 
-        const unlisten = await listen("click", (event) => {
-            console.log("click click");
-            // event.event is the event name (useful if you want to use a single callback fn for multiple event types)
-            // event.payload is the payload object
-        });
+  const [text, translate] = useTranslate();
+  const [inputValue, setInputValue] = useState("");
 
-        // emits the `click` event with the object payload
-        emit("click", {
-            theMessage: "Tauri is awesome!",
-        });
-        console.log(currentWindow);
 
+  let unlisten: Function | null;
+  const init = async () => {
+    unlisten = await listen("paste", async (e) => {
+      console.log("paste");
+      console.log(e);
+      const clipboardText = await readText();
+      console.log(clipboardText);
+      setInput(clipboardText ?? "");
+      setInputValue(clipboardText ?? "");
+      translate(clipboardText ?? "");
+    });
+  };
+  useEffect(() => {
+    init();
+    return () => {
+      async () => {
+        unlisten && unlisten();
+      };
     };
-    useEffect(() => {
-        init();
-        return () => {};
-    }, []);
+  }, []);
 
-    return (
-        <div className={`${styles.translate}`}>
-            <Reader></Reader>
-            <Translation></Translation>
-        </div>
-    );
+  return (
+    <div className="p-4 flex flex-col gap-4">
+      <Reader onChange={setInputValue} value={inputValue}></Reader>
+      <Translation></Translation>
+    </div>
+  );
 };
 
 export default Translate;

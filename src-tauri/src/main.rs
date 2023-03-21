@@ -60,29 +60,8 @@ const links: [(&str, &str, &str); 5] = [
 ];
 
 fn main() {
-    //init menu bar
-    // let sub_menu_social = {
-    //     let mut menu = SystemTrayMenu::new();
-    //     for (id, label, _url) in links
-    //         .iter()
-    //         .filter(|(id, label, _url)| id.starts_with("open-social"))
-    //     {
-    //         menu = menu.add_item(CustomMenuItem::new(id.to_string(), label.to_string()));
-    //     }
-
-    //     SystemTraySubmenu::new("Social", menu)
-    // };
-    // let sub_menu_github = {
-    //     let mut menu = SystemTrayMenu::new();
-    //     for (id, label, _url) in links
-    //         .iter()
-    //         .filter(|(id, label, _url)| id.starts_with("open-github"))
-    //     {
-    //         menu = menu.add_item(CustomMenuItem::new(id.to_string(), label.to_string()));
-    //     }
-
-    //     SystemTraySubmenu::new("GitHub", menu)
-    // };
+   
+   
     let tray_menu = SystemTrayMenu::new()
         .add_item(CustomMenuItem::new("open".to_string(), "Open"))
         .add_item(CustomMenuItem::new("quit".to_string(), "Quit"))
