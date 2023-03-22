@@ -8,6 +8,7 @@ import { inputState } from "../../store";
 import { emit, listen } from "@tauri-apps/api/event";
 import { useTranslate } from "../../hooks/useTranslate";
 import { readText } from "@tauri-apps/api/clipboard";
+import Card from "../../component/Card";
 
 const Translate = () => {
   console.log("page render");
@@ -45,6 +46,7 @@ const Translate = () => {
     <div className="p-4 flex flex-col gap-4">
       <Reader onChange={setInputValue} value={inputValue}></Reader>
       {TranslationMemo}
+      {/* <Card></Card> */}
       {/* <TranslationMemo></TranslationMemo> */}
     </div>
   );

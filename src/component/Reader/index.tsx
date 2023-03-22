@@ -1,12 +1,20 @@
 import { readText } from "@tauri-apps/api/clipboard";
 import { invoke } from "@tauri-apps/api/tauri";
-import { FC, KeyboardEventHandler, useEffect, useRef, useState } from "react";
+import {
+  FC,
+  KeyboardEventHandler,
+  Suspense,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { useRecoilState } from "recoil";
 import { useTranslate } from "../../hooks/useTranslate";
 import { inputState, translationState } from "../../store";
 import { useControllableValue, useEventListener } from "ahooks";
 import { autoGrowElementByContent } from "../../utils";
 import { AnimatePresence, motion } from "framer-motion";
+import Translate from "./Translate";
 
 type ReaderProps = {
   value: string;
@@ -21,13 +29,12 @@ const Reader: FC<ReaderProps> = (props) => {
   const [textareaHeight, setTextareaHeight] = useState("auto");
 
   const inputRef = useRef<HTMLTextAreaElement>(null);
-  const [text, translate] = useTranslate();
+  const [text, translate, isLoading] = useTranslate();
 
   useEventListener("input", autoGrowElementByContent, { target: inputRef });
 
   useEffect(() => {
-    console.log("input change");
-    // inputRef.current?. = input
+    // console.log("input change");
     return () => {};
   }, [input]);
 
@@ -58,14 +65,12 @@ const Reader: FC<ReaderProps> = (props) => {
         ></motion.textarea>
       </AnimatePresence>
       <div className="flex justify-center items-center">
-        <div
+        <Translate
+          isLoading={isLoading}
           onClick={() => {
             translate(inputValue ?? "");
           }}
-          className=" hover:bg-sky-200  active:bg-sky-50 bg-sky-500 rounded-xl w-40 h-10  text-white flex  justify-center  items-center cursor-pointer"
-        >
-          翻译
-        </div>
+        ></Translate>
       </div>
     </>
   );

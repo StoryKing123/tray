@@ -22,7 +22,8 @@ function App() {
 
   useLayoutEffect(() => {
     console.log("use effect");
-    readClipboard();
+    // readClipboard();
+
     register("Option+d", async () => {
       console.log("Shortcut triggered");
       let translateWindow = WebviewWindow.getByLabel("translate");

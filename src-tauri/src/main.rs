@@ -60,11 +60,10 @@ const links: [(&str, &str, &str); 5] = [
 ];
 
 fn main() {
-   
-   
     let tray_menu = SystemTrayMenu::new()
         .add_item(CustomMenuItem::new("open".to_string(), "Open"))
         .add_item(CustomMenuItem::new("quit".to_string(), "Quit"))
+        .add_item(CustomMenuItem::new("setting".to_string(), "设置"))
         // .add_submenu(sub_menu_social)
         // .add_submenu(sub_menu_github)
         .add_native_item(SystemTrayMenuItem::Separator)
@@ -76,6 +75,7 @@ fn main() {
     // 这里 `"quit".to_string()` 定义菜单项 ID，第二个参数是菜单项标签。
     let quit = CustomMenuItem::new("quit".to_string(), "Quit");
     let close = CustomMenuItem::new("close".to_string(), "Close");
+    let setting = CustomMenuItem::new("setting".to_string(), "设置");
     let submenu = Submenu::new("File", Menu::new().add_item(quit).add_item(close));
     let menu = Menu::new()
         .add_native_item(MenuItem::Copy)
@@ -115,6 +115,28 @@ fn on_system_tray_event(app: &AppHandle, event: SystemTrayEvent) {
                             item_handle.set_title("Hide").unwrap();
                         }
                         Err(e) => unimplemented!("what kind of errors happen here?"),
+                    }
+                }
+
+                "setting" => {
+                    let window = app.get_window("setting");
+                    match window {
+                        Some(window) => {
+                            window.show().unwrap();
+                            app.get_window("setting")
+                                .unwrap()
+                                .set_focus()
+                                .unwrap();
+                        }
+                        None => {
+                            let handle = app.app_handle();
+                            tauri::WindowBuilder::new(
+                                app,
+                                "setting",
+                                tauri::WindowUrl::App("setting.html".into()),
+                            )
+                            .build();
+                        }
                     }
                 }
                 "open" => {
